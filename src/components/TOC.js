@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 class TOC extends Component {
     render() {
+      var lists = [];
+      var data = this.props.data;
+      var i = 0;
+      while(i < data.length) {
+        // React에서는 여러 개의 element 자동 생성할 때 콘솔에 에러가 발생 > 각 element들은 key라는 props를 가져 구분 해야함
+        lists.push(<li key={data[i].id}><a href={"/content/"+data[i].id}>{data[i].title}</a></li>);
+        i = i + 1;
+      }
       return (
         <nav>
           <ul>
-              <li><a href="1.html">HTML</a></li>
-              <li><a href="2.html">CSS</a></li>
-              <li><a href="3.html">JavaScript</a></li>
+              {lists}
           </ul>
         </nav>
       );
