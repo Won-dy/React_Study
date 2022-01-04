@@ -33,13 +33,38 @@ class App extends Component {
       _title = this.state.contents[2].title;
       _desc = this.state.contents[2].desc;
     }
-    
+
+    // render 내의 this는 해당 컴포넌트 가르킴
+    console.log('render', this);
+
     return (
       <div className="App">
-        <Subject 
+        {/* <Subject 
           title={this.state.subject.title}
           sub={this.state.subject.sub}>
-        </Subject>
+        </Subject> */}
+
+        <header>
+          <h1><a href="/" onClick={function(e){
+            // render 내의 함수 내의 this는 정의 안됨
+            console.log('event in', this);
+
+            console.log(e);
+            e.preventDefault();
+
+            // this.state.mode = 'welcome';
+            // React에서는 state가 바뀔 때 setState로 해야 함
+            // 위 처럼 바꾸면 react 몰래 바꾼 거라 모름
+            this.setState({
+              mode:'welcome'
+            })
+
+            // bind this하면 함수 안에서 this는 현재 컴포넌트 App이 됨
+            // 즉 bind(this)하면 현재 함수의 this가 App 객체가 됨
+          }.bind(this)}>{this.state.subject.title}</a></h1>
+          {this.state.subject.sub}
+        </header>
+
         <TOC data={this.state.contents}></TOC>
         <Content title={_title} desc={_desc}></Content>
 
