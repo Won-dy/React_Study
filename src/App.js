@@ -11,6 +11,7 @@ class App extends Component {
     // 상위 컴포넌트 App의 state 값을 하위 컴포넌트 Subject, TOC, Content의 props 값으로 전달 가능
     this.state = {
       mode:"read",
+      selected_content_id:2,
       subject:{title:'WEB', sub:'world wide web!'},
       welcome:{title:'Welcome', desc:'Hello, React!!'},
       contents:[
@@ -29,9 +30,18 @@ class App extends Component {
     if(this.state.mode === 'welcome'){
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
-    } else if(this.state.mode === 'read'){
-      _title = this.state.contents[2].title;
-      _desc = this.state.contents[2].desc;
+    } 
+    else if(this.state.mode === 'read'){
+      var i = 0;
+      while(i < this.state.contents.length){
+        var data = this.state.contents[i];
+        if(data.id === this.state.selected_content_id) {
+          _title = data.title;
+          _desc = data.desc;
+          break;
+        }
+        i = i + 1;
+      }
     }
 
     // render 내의 this는 해당 컴포넌트 가르킴
@@ -39,12 +49,16 @@ class App extends Component {
 
     return (
       <div className="App">
-        {/* <Subject 
+        <Subject 
           title={this.state.subject.title}
-          sub={this.state.subject.sub}>
-        </Subject> */}
+          sub={this.state.subject.sub}
+          onChangePage={function(){
+            this.setState({mode:'welcome'});
+          }.bind(this)}  
+        >
+        </Subject>
 
-        <header>
+        {/* <header>
           <h1><a href="/" onClick={function(e){
             // render 내의 함수 내의 this는 정의 안됨
             console.log('event in', this);
@@ -63,9 +77,17 @@ class App extends Component {
             // 즉 bind(this)하면 현재 함수의 this가 App 객체가 됨
           }.bind(this)}>{this.state.subject.title}</a></h1>
           {this.state.subject.sub}
-        </header>
+        </header> */}
 
-        <TOC data={this.state.contents}></TOC>
+        <TOC 
+          onChangePage={function(id){
+            this.setState({
+              mode:'read',
+              selected_content_id:Number(id)
+            });
+          }.bind(this)}
+          data={this.state.contents}>
+        </TOC>
         <Content title={_title} desc={_desc}></Content>
 
         {/*
