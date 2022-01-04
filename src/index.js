@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// <App> 사용자 정의 태그 = Component
 ReactDOM.render(
   <React.StrictMode>
     <App />
