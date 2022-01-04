@@ -33,16 +33,20 @@ class App extends Component {
       _title = this.state.contents[2].title;
       _desc = this.state.contents[2].desc;
     }
+    
     return (
       <div className="App">
         <Subject 
           title={this.state.subject.title}
           sub={this.state.subject.sub}>
         </Subject>
-        <Subject title="React" sub="For UI"></Subject>
         <TOC data={this.state.contents}></TOC>
         <Content title={_title} desc={_desc}></Content>
+
+        {/*
+        <Subject title="React" sub="For UI"></Subject>
         <Content title="CSS" desc="CSS is Cascading Style Sheets."></Content>
+        */}
       </div>
     );
   }
