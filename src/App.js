@@ -14,7 +14,7 @@ class App extends Component {
     // 상위 컴포넌트 App의 state 값을 하위 컴포넌트 Subject, TOC, Content의 props 값으로 전달 가능
     this.max_content_id = 3;  // UI에 영향 없는 애는 state로 안함
     this.state = {
-      mode:"create",
+      mode:"welcome",
       selected_content_id:2,
       subject:{title:'WEB', sub:'world wide web!'},
       welcome:{title:'Welcome', desc:'Hello, React!!'},
@@ -158,9 +158,28 @@ class App extends Component {
               Delete는 버튼 클릭할 때 작동하도록 구현 */}
         <Control 
           onChangeMode={function(_mode){
-            this.setState({
-              mode:_mode
-            });
+            if(_mode === 'delete'){
+               if(window.confirm('Really Delete?')){
+                 var _contents = Array.from(this.state.contents);
+                 var i = 0;
+                 while(i<_contents.length){
+                  if(_contents[i].id === this.state.selected_content_id){
+                    _contents.splice(i,1)  // _contents의 원본을 바꿈 -> i부터 1개 지움
+                    break;
+                  }
+                  i += 1;
+                 }
+                 this.setState({
+                  mode:'welcome', 
+                  contents:_contents
+                });
+                alert('Deleted!');
+               }
+            } else {
+              this.setState({
+                mode:_mode
+              });
+            }
         }.bind(this)}
         ></Control>
         {this.getContent()}
