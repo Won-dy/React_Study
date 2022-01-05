@@ -1,6 +1,17 @@
 import React, { Component } from 'react';
 class TOC extends Component {
+    // shouldComponentUpdate 호출 후 render 호출
+    // return true면 render 호출, false면 X
+    // 새로 바뀐 props, state와 이전 값에 접근 가능
+    shouldComponentUpdate(newProps, newState){
+      console.log("TOC===>shouldComponentUpdate")
+      if(this.props.data === newProps.data){
+        return false;
+      }
+      return true;
+    }
     render() {
+      console.log("TOC===>render")
       var lists = [];
       var data = this.props.data;
       var i = 0;

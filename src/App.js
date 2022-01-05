@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import TOC from './components/TOC'
-import Content from './components/Content'
+import ReadContent from './components/ReadContent'
+import CreateContent from './components/CreateContent'
 import Subject from './components/Subject'
+import Control from './components/Control'
 import './App.css';
-
+  
 class App extends Component {
   constructor(props) {
     super(props);
     // 컴포넌트를 초기화 해주고 싶은 코드
     // 상위 컴포넌트 App의 state 값을 하위 컴포넌트 Subject, TOC, Content의 props 값으로 전달 가능
+    this.max_content_id = 3;  // UI에 영향 없는 애는 state로 안함
     this.state = {
-      mode:"read",
+      mode:"create",
       selected_content_id:2,
       subject:{title:'WEB', sub:'world wide web!'},
       welcome:{title:'Welcome', desc:'Hello, React!!'},
@@ -26,10 +29,11 @@ class App extends Component {
   // props나 state 값이 바뀌면 화면이 다시 그려짐
   render() {  
     console.log('App render');
-    var _title, _desc = null;
+    var _title, _desc, _article = null;
     if(this.state.mode === 'welcome'){
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
     } 
     else if(this.state.mode === 'read'){
       var i = 0;
@@ -42,6 +46,37 @@ class App extends Component {
         }
         i = i + 1;
       }
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+    }
+    else if(this.state.mode ==='create'){
+      _article = <CreateContent onSubmit={function(_title, _desc){
+        // add content to this.state.contents
+        this.max_content_id += 1;
+        // #1. push(): 원본 contents의 배열에 값 추가
+        // state 값 추가 변경 시 원본 건들지 마 > 추후 성능 개선 시 문제
+        // this.state.contents.push(
+        //   {id:this.max_content_id, title:_title, desc:_desc}
+        // );
+      
+        // #1-1. push() 쓰고 싶으면 Array.from 사용해서 복제 후 사용 / 배열일 때만 가능
+        // Object.assign -> 객체를 바꾸고 싶을 때 사용
+        // Array.frome -> 내용은 같지만 === 결과는 false이므로 shouldComponentUpdate 사용 가능
+        // var newContents = Array.from(this.state.contents);
+        // newContents.push({id:this.max_content_id, title:_title, desc:_desc});
+        // this.setState({
+        //   contents:newContents
+        // });
+
+        // #2. concat(): 원본 유지, 복제본 리턴
+        // state 값 수정시 원본 수정X, 수정 복제본을 setState해라
+        // shouldComponentUpdate 위해 불필요한 render 호출 방지
+        var _contents = this.state.contents.concat(
+          {id:this.max_content_id, title:_title, desc:_desc}
+        );
+        this.setState({
+          contents:_contents
+        });
+      }.bind(this)}></CreateContent>
     }
 
     // render 내의 this는 해당 컴포넌트 가르킴
@@ -88,7 +123,21 @@ class App extends Component {
           }.bind(this)}
           data={this.state.contents}>
         </TOC>
-        <Content title={_title} desc={_desc}></Content>
+
+          {/* CRU는 특정 페이지로 이동해서 오퍼레이션 실행
+              Delete는 버튼 클릭할 때 작동하도록 구현 */}
+
+        <Control 
+          onChangeMode={function(_mode){
+            this.setState({
+              mode:_mode
+            });
+        }.bind(this)}
+        >
+
+        </Control>
+
+        {_article}
 
         {/*
         <Subject title="React" sub="For UI"></Subject>

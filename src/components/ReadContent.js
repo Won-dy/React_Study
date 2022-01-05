@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-class Content extends Component {
+class ReadContent extends Component {
     render() {
       console.log('Content render');
       return (
@@ -12,4 +12,4 @@ class Content extends Component {
   }
 
   // 외부에서 Content 클래스를 가져다가 쓸 수 있음
-  export default Content;
+  export default ReadContent;
